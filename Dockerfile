@@ -4,14 +4,14 @@ LABEL Name="no_one"
 WORKDIR /root
 
 COPY config/* /tmp/
-# install openssh-server, openjdk
+# install openssh-server, openjdk, wget
 # change the apt sources.list to speed up download in China
 # RUN mv /tmp/sources.list /etc/apt/sources.list
-RUN apt-get update && apt-get install -y openssh-server openjdk-8-jdk
+RUN apt-get update && apt-get install -y openssh-server openjdk-8-jdk wget
 
-# install hadoop 3.2.4
-COPY hadoop-3.2.4.tar.gz .
-RUN tar -xzvf hadoop-3.2.4.tar.gz && \
+# download and install hadoop 3.2.4
+RUN wget https://github.com/non-one/HadoopDockerDemo/releases/download/dep/hadoop-3.2.4.tar.gz && \
+    tar -xzvf hadoop-3.2.4.tar.gz && \
     mv hadoop-3.2.4 /usr/local/hadoop && \
     rm hadoop-3.2.4.tar.gz
 
@@ -50,4 +50,3 @@ RUN chmod +x ~/start-hadoop.sh && \
 RUN /usr/local/hadoop/bin/hdfs namenode -format
 
 CMD [ "sh", "-c", "service ssh start; bash"]
-
